@@ -7,7 +7,7 @@
   --accent: #2e7d32;
   --accent-hover: #1b5e20;
   --border: #e5e5e5;
-  --header-bg: linear-gradient(135deg, #f4fbf7 0%, #c8ebd6 40%, #1b5e20 100%);
+  --header-bg: linear-gradient(135deg, #a5d6a7 0%, #2e7d32 60%, #1b5e20 100%);
   --header-text: #ffffff;
   --shadow: 0 1px 3px rgba(0,0,0,0.08);
 }
