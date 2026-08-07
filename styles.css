@@ -115,10 +115,10 @@ a {
   margin: 0 auto;
   padding: 10px 20px;
   display: grid;
-  grid-template-columns: 360px 1fr 220px;
+  grid-template-columns: 420px 1fr 220px;
   align-items: center;
   gap: 20px;
-  min-height: 140px;
+  min-height: 150px;
 }
 
 .brand {
@@ -129,8 +129,8 @@ a {
 }
 
 .brand-logo-img {
-  height: 125px;
-  width: 360px;
+  height: 135px;
+  width: 420px;
   object-fit: contain;
 }
 
