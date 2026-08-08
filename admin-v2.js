@@ -1173,7 +1173,8 @@ async function loadPaymentConfig() {
 document.getElementById('payment-config-form').addEventListener('submit', async event => {
   event.preventDefault();
   try {
-    const priceReais = parseFloat(document.getElementById('cfg-subscription-price').value) || 3.99;
+    const priceInput = document.getElementById('cfg-subscription-price').value;
+    const priceReais = priceInput !== '' ? parseFloat(priceInput) : 3.99;
     const priceCents = Math.round(priceReais * 100);
     await fetchJson('/api/admin/payment-config', {
       method: 'PUT',
