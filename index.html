@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=1.7">
+  <link rel="stylesheet" href="styles.css?v=1.8">
   <style>
     .btn-header { display:inline-flex; align-items:center; justify-content:center; height:38px; padding:0 18px; box-sizing:border-box; background:#1b5e20; color:#fff; border:2px solid #1b5e20; text-decoration:none; font-weight:700; font-size:0.85rem; border-radius:6px; transition:all 0.2s ease; line-height:1; white-space:nowrap; }
     .btn-header:hover { background:#2e7d32; border-color:#2e7d32; }
@@ -107,19 +107,19 @@
 
   <main class="main-content">
     <div class="news-grid-top">
-      <div class="news-featured" id="featured-news"></div>
+      <div class="news-main-column">
+        <div class="news-featured" id="featured-news"></div>
+        <div class="ad-slot-container ad-slot-infeed" id="ad-infeed-top"></div>
+      </div>
       <div class="news-sidebar">
         <div id="sidebar-news"></div>
         <div class="ad-slot-container ad-slot-sidebar" id="ad-sidebar-top"></div>
+        <div class="ad-slot-container ad-slot-sidebar" id="ad-sidebar-bottom"></div>
       </div>
     </div>
 
-    <div class="ad-slot-container ad-slot-infeed" id="ad-infeed-top"></div>
-
     <h2 class="section-title">Últimas Notícias</h2>
     <div class="news-grid-bottom" id="grid-news"></div>
-
-    <div class="ad-slot-container ad-slot-sidebar" id="ad-sidebar-bottom" style="margin:20px auto;text-align:center;"></div>
 
     <div class="ad-slot-container ad-slot-infeed" id="ad-infeed-bottom"></div>
 
