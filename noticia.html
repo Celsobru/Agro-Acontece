@@ -280,8 +280,14 @@
 
       document.title = item.title + ' - Agro Acontece';
 
-      var fullText = item.full_content || item.description;
-      var paragraphs = fullText.split('\n').filter(function(p) { return p.trim(); }).map(function(p) { return '<p>' + p + '</p>'; }).join('');
+      var fullText = item.full_content || item.description || '';
+      var paragraphs = fullText.split(/\r?\n/).filter(function(p) { return p.trim(); }).map(function(p) {
+        var trimmed = p.trim();
+        if (/^<(h[1-6]|p|blockquote|ul|ol|li|div)/i.test(trimmed)) {
+          return trimmed;
+        }
+        return '<p>' + trimmed + '</p>';
+      }).join('');
 
       document.getElementById('news-content').innerHTML =
         '<a href="/" class="back-link">&#8592; Voltar</a>' +
