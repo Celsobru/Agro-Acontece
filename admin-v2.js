@@ -385,7 +385,9 @@ async function editNews(id) {
   if (document.getElementById('news-ad-space')) {
     document.getElementById('news-ad-space').value = news.ad_space_id || '';
   }
+  const existingImage = news.image_url || news.image || '';
   const existingVideo = news.video_url || '';
+  document.getElementById('news-form').dataset.existingImage = existingImage;
   document.getElementById('news-form').dataset.existingVideo = existingVideo;
   if (existingVideo && (existingVideo.startsWith('http://') || existingVideo.startsWith('https://'))) {
     document.getElementById('news-video-link').value = existingVideo;
@@ -610,7 +612,7 @@ async function loadUserInfo() {
 document.getElementById('news-form').addEventListener('submit', async event => {
   event.preventDefault();
   const imageFile = document.getElementById('image-file').files[0];
-  let imageUrl = '';
+  let imageUrl = document.getElementById('news-form').dataset.existingImage || '';
   if (imageFile) imageUrl = await uploadImage(imageFile);
   const videoLink = document.getElementById('news-video-link').value.trim();
   const videoFile = document.getElementById('news-video-file').files[0];
@@ -653,6 +655,7 @@ document.getElementById('news-form').addEventListener('submit', async event => {
   }
 
   document.getElementById('news-form').reset();
+  delete document.getElementById('news-form').dataset.existingImage;
   delete document.getElementById('news-form').dataset.existingVideo;
   document.getElementById('news-form').querySelector('button[type="submit"]').textContent = 'Salvar Noticia';
   editingNewsId = null;
@@ -661,6 +664,7 @@ document.getElementById('news-form').addEventListener('submit', async event => {
 
 document.getElementById('news-form').addEventListener('reset', () => {
   editingNewsId = null;
+  delete document.getElementById('news-form').dataset.existingImage;
   delete document.getElementById('news-form').dataset.existingVideo;
   document.getElementById('news-form').querySelector('button[type="submit"]').textContent = 'Salvar Noticia';
 });
