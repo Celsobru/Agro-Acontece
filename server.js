@@ -252,7 +252,7 @@ app.post('/api/upload', requireAuth, upload.single('image'), (req, res) => {
 
 // ===== PUBLIC NEWS =====
 app.get('/api/news', async (req, res) => {
-  const { category } = req.query;
+  const { category, subcategory, search } = req.query;
   const adminNews = await allAsync(
     "SELECT * FROM news WHERE status = 'published' AND (news_type = 'admin' OR news_type IS NULL) ORDER BY created_at DESC"
   );
@@ -270,8 +270,28 @@ app.get('/api/news', async (req, res) => {
   if (category) {
     allNews = allNews.filter(n => n.category === category);
   }
+  if (subcategory) {
+    allNews = allNews.filter(n => (n.subcategory || '').toLowerCase() === subcategory.toLowerCase());
+  }
+  if (search) {
+    const q = search.toLowerCase().trim();
+    allNews = allNews.filter(n =>
+      (n.title || '').toLowerCase().includes(q) ||
+      (n.description || '').toLowerCase().includes(q) ||
+      (n.full_content || '').toLowerCase().includes(q)
+    );
+  }
 
   res.json(allNews);
+});
+
+app.get('/api/pages', async (req, res) => {
+  try {
+    const pages = await allAsync('SELECT id, slug, title FROM pages ORDER BY title ASC');
+    res.json(pages);
+  } catch (err) {
+    res.json([]);
+  }
 });
 
 app.get('/api/news/:id', async (req, res) => {
