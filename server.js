@@ -251,12 +251,14 @@ function requireClient(req, res, next) {
 async function ensureAdminUser() {
   const admin = await getAsync('SELECT id FROM users WHERE role = ? LIMIT 1', ['admin']);
   if (!admin) {
-    const passwordHash = bcrypt.hashSync('***REMOVED***', 10);
+    const seedEmail = process.env.ADMIN_EMAIL || 'admin@agroacontece.com.br';
+    const seedPass = process.env.ADMIN_PASSWORD || require('crypto').randomBytes(12).toString('base64url');
+    const passwordHash = bcrypt.hashSync(seedPass, 10);
     await runAsync(
       'INSERT INTO users (name, email, password_hash, role, created_at) VALUES (?, ?, ?, ?, datetime("now","localtime"))',
-      ['Administrador', 'admin@agroacontece.com.br', passwordHash, 'admin']
+      ['Administrador', seedEmail, passwordHash, 'admin']
     );
-    console.log('Conta admin criada: admin@agroacontece.com.br / ***REMOVED***');
+    console.log('[seed] Conta admin criada: ' + seedEmail + (process.env.ADMIN_PASSWORD ? ' (senha do .env)' : ' | SENHA GERADA: ' + seedPass));
   }
 }
 
