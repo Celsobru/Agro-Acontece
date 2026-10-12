@@ -35,7 +35,12 @@ const storage = multer.diskStorage({
 });
 const fileFilter = (req, file, cb) => {
   const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'application/pdf', 'video/mp4'];
-  if (allowedTypes.includes(file.mimetype)) {
+  // Seguranca: o mimetype vem do cliente e pode ser falsificado.
+  // Validamos tambem a extensao real do arquivo para bloquear uploads
+  // de scripts (ex.: .js, .php, .html, .svg) usados em ataques de XSS/RCE.
+  const allowedExts = ['.jpg', '.jpeg', '.png', '.webp', '.gif', '.pdf', '.mp4'];
+  const ext = path.extname(file.originalname || '').toLowerCase();
+  if (allowedTypes.includes(file.mimetype) && allowedExts.includes(ext)) {
     cb(null, true);
   } else {
     cb(new Error('Tipo de arquivo não permitido'), false);
