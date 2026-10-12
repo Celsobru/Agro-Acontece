@@ -1,3 +1,10 @@
+// Escapa HTML para evitar XSS em dados vindos do banco de dados
+function escHtml(v) {
+  return String(v === undefined || v === null ? '' : v)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
 const sectionTitles = {
   dashboard: 'Dashboard',
   news: 'Gerenciar Notícias',
@@ -1684,8 +1691,8 @@ async function loadSubscribers() {
     };
     tbody.innerHTML = subs.map(s => `
       <tr>
-        <td>${s.user_name}</td>
-        <td>${s.email}</td>
+        <td>${escHtml(s.user_name)}</td>
+        <td>${escHtml(s.email)}</td>
         <td>${s.plan === 'monthly' ? 'Mensal' : s.plan}</td>
         <td>R$ ${(s.price_cents/100).toFixed(2)}</td>
         <td>${statusBadge(s.status)}</td>
@@ -1937,16 +1944,22 @@ async function loadUsers() {
   const table = document.getElementById('users-table');
   table.innerHTML = users.map(u => `
     <tr>
-      <td>${u.name}</td>
-      <td>${u.email}</td>
+      <td>${escHtml(u.name)}</td>
+      <td>${escHtml(u.email)}</td>
       <td><span class="badge ${u.role === 'admin' ? 'badge-info' : 'badge-default'}">${u.role === 'admin' ? 'Master' : 'Comum'}</span></td>
-      <td>${u.created_at}</td>
+      <td>${escHtml(u.created_at)}</td>
       <td>
-        <button class="btn btn-sm btn-outline" onclick="editUser(${u.id}, '${u.name.replace(/'/g, "\'")}', '${u.email}', '${u.role}')">Editar</button>
-        <button class="btn btn-sm btn-danger" onclick="deleteUser(${u.id})">Excluir</button>
+        <button class="btn btn-sm btn-outline user-edit" data-id="${u.id}" data-name="${escHtml(u.name)}" data-email="${escHtml(u.email)}" data-role="${escHtml(u.role)}">Editar</button>
+        <button class="btn btn-sm btn-danger user-delete" data-id="${u.id}">Excluir</button>
       </td>
     </tr>
   `).join('');
+  table.querySelectorAll('.user-edit').forEach(btn => {
+    btn.addEventListener('click', () => editUser(Number(btn.dataset.id), btn.dataset.name, btn.dataset.email, btn.dataset.role));
+  });
+  table.querySelectorAll('.user-delete').forEach(btn => {
+    btn.addEventListener('click', () => deleteUser(Number(btn.dataset.id)));
+  });
 }
 
 function editUser(id, name, email, role) {

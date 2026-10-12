@@ -59,6 +59,24 @@ const resetLimiter = rateLimit({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({ origin: true, credentials: true }));
+
+// ======= Protecao anti-XSS (stored XSS) =======
+// Remove tags/HTML de campos de texto simples vindos do cliente (nome, titulo, email, etc.)
+const PLAIN_TEXT_FIELDS = ['name', 'nome', 'company', 'empresa', 'email', 'phone', 'telefone', 'whatsapp', 'document', 'documento', 'cpf', 'cnpj', 'title', 'titulo'];
+function sanitizeTextFields(obj) {
+  if (!obj || typeof obj !== 'object') return;
+  for (const key of Object.keys(obj)) {
+    if (typeof obj[key] === 'string' && PLAIN_TEXT_FIELDS.includes(key.toLowerCase())) {
+      obj[key] = obj[key].replace(/<[^>]*>/g, '').replace(/[<>]/g, '').trim();
+    }
+  }
+}
+app.use((req, res, next) => {
+  sanitizeTextFields(req.body);
+  sanitizeTextFields(req.query);
+  next();
+});
+// =============================================
 app.use(session({
   secret: '***REMOVED***',
   resave: false,
