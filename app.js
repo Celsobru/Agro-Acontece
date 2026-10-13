@@ -287,14 +287,19 @@ function openModal(item) {
 
 function closeModal() {
   const modal = document.getElementById('news-modal');
+  if (!modal) return;
   modal.classList.remove('open');
   document.body.style.overflow = '';
 }
 
-document.getElementById('modal-close').addEventListener('click', closeModal);
-document.getElementById('news-modal').addEventListener('click', e => {
-  if (e.target === e.currentTarget) closeModal();
-});
+const _modalCloseBtn = document.getElementById('modal-close');
+if (_modalCloseBtn) _modalCloseBtn.addEventListener('click', closeModal);
+const _newsModalEl = document.getElementById('news-modal');
+if (_newsModalEl) {
+  _newsModalEl.addEventListener('click', e => {
+    if (e.target === e.currentTarget) closeModal();
+  });
+}
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') closeModal();
 });
@@ -420,7 +425,7 @@ function renderHeaderNewsTicker(newsList) {
   const html = items.map(item => `
     <a href="/noticia.html?news=${item.id}" target="_blank">
       <span class="ticker-track-dot">&#9679;</span>
-      <span>${item.title}</span>
+      <span>${escHtml(item.title)}</span>
     </a>
   `).join('');
   track.innerHTML = html + html;
@@ -472,16 +477,19 @@ async function init() {
   }
 }
 
-init().catch(err => {
-  const params = new URLSearchParams(window.location.search);
-  const category = params.get('category');
-  const newsItems = loadNews();
-  const filtered = category ? newsItems.filter(n => n.category === category) : newsItems;
-  renderFeatured(filtered);
-  renderSidebar(filtered);
-  renderGrid(filtered);
-  renderList(filtered);
-});
+// So executa a renderizacao da home quando os containers de noticias existem (index.html)
+if (document.getElementById('featured-news') || document.getElementById('grid-news') || document.getElementById('list-news')) {
+  init().catch(err => {
+    const params = new URLSearchParams(window.location.search);
+    const category = params.get('category');
+    const newsItems = loadNews();
+    const filtered = category ? newsItems.filter(n => n.category === category) : newsItems;
+    renderFeatured(filtered);
+    renderSidebar(filtered);
+    renderGrid(filtered);
+    renderList(filtered);
+  });
+}
 
 // Dynamic Navbar Categories
 async function loadDynamicNav() {
