@@ -1757,7 +1757,7 @@ async function init() {
     loadReservations(),
     loadNewsConfig(),
     loadSiteConfig(),
-    loadPage('sobre'),
+    loadPageData('sobre'),
     loadSubscribers(),
     (currentUserRole === "admin" ? loadUsers() : Promise.resolve())
   ]);
