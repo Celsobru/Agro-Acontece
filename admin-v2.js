@@ -79,7 +79,13 @@ document.getElementById('btn-logout').addEventListener('click', async () => {
 });
 
 async function fetchJson(url, options = {}) {
-  const response = await fetch(url, options);
+  // Garante que corpo JSON seja enviado com o Content-Type correto,
+  // senao o express.json() nao parseia e req.body chega vazio.
+  const opts = { ...options };
+  if (opts.body && typeof opts.body === 'string' && !opts.headers) {
+    opts.headers = { 'Content-Type': 'application/json' };
+  }
+  const response = await fetch(url, opts);
   if (!response.ok) {
     const data = await response.json().catch(() => ({}));
     throw new Error(data.error || 'Erro na requisição');
