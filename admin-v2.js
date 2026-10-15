@@ -28,6 +28,7 @@ const sectionTitles = {
   pages: 'Páginas Institucionais',
   subscribers: 'Assinantes',
   users: 'Usuários',
+  emailmarketing: 'E-mail Marketing',
 };
 
 const sections = {
@@ -48,6 +49,7 @@ const sections = {
   pages: document.getElementById('section-pages'),
   subscribers: document.getElementById('section-subscribers'),
   users: document.getElementById('section-users'),
+  emailmarketing: document.getElementById('section-emailmarketing'),
 };
 
 const navItems = document.querySelectorAll('.sidebar-nav-item[data-section]');
@@ -67,6 +69,7 @@ function showSection(name) {
   if (name === 'pages') loadPagesSection();
   if (name === 'analytics') loadAnalyticsSection();
   if (name === 'financial') loadFinancialSection();
+  if (name === 'emailmarketing') initEmailSection();
 }
 
 navItems.forEach(item => {
